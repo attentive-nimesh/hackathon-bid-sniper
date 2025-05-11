@@ -7,6 +7,7 @@ import FormField from "../FormField";
 import { useMutation } from "@tanstack/react-query";
 import { loginUser } from "@/utils/auth";
 import { toast } from "sonner";
+import { useAuth } from "@/context/AuthContext";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email"),
@@ -17,6 +18,8 @@ type LoginInputs = z.infer<typeof loginSchema>;
 
 export default function LoginForm() {
   const navigate = useNavigate();
+
+  const { login } = useAuth();
 
   const {
     register,
@@ -30,8 +33,7 @@ export default function LoginForm() {
   const { mutate, isPending } = useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
+      login(data);
       navigate("/dashboard");
     },
     onError: () => {

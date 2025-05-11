@@ -1,13 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { NavLink, useNavigate } from "react-router-dom";
 import logo from "@/assets/logo.webp";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Navbar() {
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    logout();
     navigate("/login");
   };
 
@@ -41,12 +42,12 @@ export default function Navbar() {
           Dashboard
         </NavLink>
         <NavLink
-          to="/trade-params"
+          to="/setup"
           className={({ isActive }) =>
             `${linkBaseStyle} ${isActive ? activeStyle : "hover:underline"}`
           }
         >
-          Trade Params
+          Setup
         </NavLink>
         <Button
           variant="outline"

@@ -1,14 +1,9 @@
 import { useForm, FormProvider } from "react-hook-form";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  formSchema,
-  defaultValues,
-  type TradeParamsFormFields,
-} from "./formSchema";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { SetupGuideTabs } from "./components/SetupGuideTab";
-import { SharedSubscriptionTab } from "./components/SharedSubscription";
-import { TradeParamsFormTab } from "./components/TradeParamsForm";
 import { useEffect, useState } from "react";
 import { AVAILABLE_PLATFORMS, TRADE_PARAMS } from "@/constants";
 import {
@@ -16,15 +11,22 @@ import {
   patchSourceEmail,
   postOnboarding,
 } from "@/utils/onboarding";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { toast } from "sonner";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
-type TradeParamsTabType = "shared" | "form" | "guide";
+import { SetupGuideTabs } from "./components/SetupGuideTab";
+import { BidSourcesTab } from "./components/BidSourcesTab";
+import { QualificationsTab } from "./components/Qualifications";
+import {
+  formSchema,
+  defaultValues,
+  type TradeParamsFormFields,
+} from "./formSchema";
 
-const TradeParams = () => {
-  const [activeTab, setActiveTab] = useState<TradeParamsTabType>("shared");
+type SetupTabType = "shared" | "form" | "guide";
+
+const Setup = () => {
+  const [activeTab, setActiveTab] = useState<SetupTabType>("shared");
 
   const methods = useForm({
     resolver: zodResolver(formSchema),
@@ -65,16 +67,6 @@ const TradeParams = () => {
   const isPending = isSubmittingSourceEmail || isPendingOnboarding;
 
   useEffect(() => {
-    const user = localStorage.getItem("user");
-    if (user) {
-      const parsedData = JSON.parse(user);
-      methods.reset({
-        sourceEmail: parsedData.source_email || "",
-      });
-    }
-  }, [methods]);
-
-  useEffect(() => {
     if (data) {
       const sharedSubscriptions = AVAILABLE_PLATFORMS.map((platform) => {
         const account = data?.onboarding?.accounts?.find(
@@ -100,17 +92,24 @@ const TradeParams = () => {
         };
       });
 
+      const user = localStorage.getItem("user");
+      let sourceEmail = "";
+      if (user) {
+        const parsedData = JSON.parse(user);
+        sourceEmail = parsedData.source_email || "";
+      }
+
       methods.reset({
         sharedSubscriptions,
         tradeParams,
+        sourceEmail,
       });
     }
   }, [data, methods]);
 
   const handleNext = () => setActiveTab("form");
   const handlePrevious = () => setActiveTab("shared");
-  const handleTabsChange = (tab: string) =>
-    setActiveTab(tab as TradeParamsTabType);
+  const handleTabsChange = (tab: string) => setActiveTab(tab as SetupTabType);
 
   const onSubmit = (data: TradeParamsFormFields) => {
     // Filter out the params where weightage is not provided
@@ -173,46 +172,49 @@ const TradeParams = () => {
   return (
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(onSubmit)} className="p-6 space-y-6">
-        <Tabs value={activeTab} onValueChange={handleTabsChange}>
-          <TabsList className="mb-6">
-            <TabsTrigger
-              className="bg-white text-black data-[state=active]:bg-blue-700 data-[state=active]:text-white transition"
-              value="shared"
-            >
-              Shared Subscription
-            </TabsTrigger>
-            <TabsTrigger
-              className="bg-white text-black data-[state=active]:bg-blue-700 data-[state=active]:text-white transition"
-              value="form"
-            >
-              Trade Params
-            </TabsTrigger>
-            <TabsTrigger
-              className="bg-white text-black data-[state=active]:bg-blue-700 data-[state=active]:text-white transition"
-              value="guide"
-            >
-              Setup Guide
-            </TabsTrigger>
-          </TabsList>
+        <Card>
+          <Tabs value={activeTab} onValueChange={handleTabsChange}>
+            <CardHeader>
+              <TabsList className="space-x-2">
+                <TabsTrigger
+                  className="w-[200px] bg-white text-black data-[state=active]:bg-blue-700 data-[state=active]:text-white transition"
+                  value="shared"
+                >
+                  Bid Sources
+                </TabsTrigger>
+                <TabsTrigger
+                  className="bg-white text-black data-[state=active]:bg-blue-700 data-[state=active]:text-white transition"
+                  value="form"
+                >
+                  Qualifications
+                </TabsTrigger>
+                <TabsTrigger
+                  className="bg-white text-black data-[state=active]:bg-blue-700 data-[state=active]:text-white transition"
+                  value="guide"
+                >
+                  Setup Guide
+                </TabsTrigger>
+              </TabsList>
+            </CardHeader>
+            <TabsContent value="shared">
+              <BidSourcesTab onNext={handleNext} />
+            </TabsContent>
 
-          <TabsContent value="shared">
-            <SharedSubscriptionTab onNext={handleNext} />
-          </TabsContent>
+            <TabsContent value="form">
+              <QualificationsTab
+                onPrevious={handlePrevious}
+                isPending={isPending}
+              />
+            </TabsContent>
 
-          <TabsContent value="form">
-            <TradeParamsFormTab
-              onPrevious={handlePrevious}
-              isPending={isPending}
-            />
-          </TabsContent>
-
-          <TabsContent value="guide">
-            <SetupGuideTabs />
-          </TabsContent>
-        </Tabs>
+            <TabsContent value="guide">
+              <SetupGuideTabs />
+            </TabsContent>
+          </Tabs>
+        </Card>
       </form>
     </FormProvider>
   );
 };
 
-export default TradeParams;
+export default Setup;

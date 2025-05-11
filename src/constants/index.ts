@@ -21,3 +21,10 @@ export const AVAILABLE_PLATFORMS = [
   "State and Federal Bids",
   "Planhub",
 ];
+
+export const BidType = {
+  PUBLIC: "PUBLIC",
+  PRIVATE: "PRIVATE",
+} as const;
+
+export type BidType = (typeof BidType)[keyof typeof BidType];

@@ -1,14 +1,15 @@
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"; // ShadCN Tabs components
-import { Mail, MailOpen } from "lucide-react"; // Lucide icons for Gmail and Outlook
-import { Badge } from "@/components/ui/badge"; // Assuming Badge component is available
-import { Card, CardContent } from "@/components/ui/card"; // Assuming Card component is available
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { CardContent } from "@/components/ui/card";
+import gmailImg from "@/assets/gmail-icon.png";
+import outlookImg from "@/assets/outlook-icon.png";
 
 // Array of tab data containing headings, strong texts, and normal text
 const tabData = [
   {
     value: "gmail",
     label: "Gmail",
-    icon: <Mail />,
+    img: gmailImg,
     badge: null,
     content: [
       {
@@ -53,19 +54,19 @@ const tabData = [
         type: "strong",
         text: "Enter the forwarding email:",
         description:
-          "A pop-up window will appear. Type 'info@ironpeakmech.com' into the field and click 'Next'.",
+          "A pop-up window will appear. Type '<FORWARDED_EMAIL>' into the field and click 'Next'.",
       },
       {
         type: "strong",
         text: "Proceed to verification:",
         description:
-          "Another pop-up will appear to confirm. Click 'Proceed'. Gmail will then send a verification email to 'info@ironpeakmech.com'.",
+          "Another pop-up will appear to confirm. Click 'Proceed'. Gmail will then send a verification email to '<FORWARDED_EMAIL>'.",
       },
       {
         type: "strong",
         text: "Verify the forwarding address:",
         description:
-          "Log in to the 'info@ironpeakmech.com' email account. Open the verification email from Gmail. Click on the verification link within the email.",
+          "Log in to the '<FORWARDED_EMAIL>' email account. Open the verification email from Gmail. Click on the verification link within the email.",
       },
       {
         type: "strong",
@@ -77,7 +78,7 @@ const tabData = [
         type: "strong",
         text: "Enable forwarding:",
         description:
-          "Under the 'Forwarding and POP/IMAP' tab, in the 'Forwarding' section, select the option 'Forward a copy of incoming mail to'. The newly verified address 'info@ironpeakmech.com' should be visible in the dropdown.",
+          "Under the 'Forwarding and POP/IMAP' tab, in the 'Forwarding' section, select the option 'Forward a copy of incoming mail to'. The newly verified address '<FORWARDED_EMAIL>' should be visible in the dropdown.",
       },
       {
         type: "strong",
@@ -103,7 +104,7 @@ const tabData = [
   {
     value: "outlookNew",
     label: "Outlook",
-    icon: <MailOpen />,
+    img: outlookImg,
     badge: (
       <Badge
         className="bg-white text-blue-700 border-blue-700"
@@ -150,7 +151,7 @@ const tabData = [
         type: "strong",
         text: "Enable forwarding:",
         description:
-          "Check the box for 'Enable forwarding'. Enter 'info@ironpeakmech.com' in the 'Forward my email to' field.",
+          "Check the box for 'Enable forwarding'. Enter '<FORWARDED_EMAIL>' in the 'Forward my email to' field.",
       },
       {
         type: "strong",
@@ -168,7 +169,7 @@ const tabData = [
   {
     value: "outlookClassic",
     label: "Outlook",
-    icon: <MailOpen />,
+    img: outlookImg,
     badge: (
       <Badge
         className="bg-white text-blue-700 border-blue-700"
@@ -207,7 +208,7 @@ const tabData = [
         type: "strong",
         text: "Enable Forwarding:",
         description:
-          "Select the option to start forwarding or enable forwarding. Enter 'info@ironpeakmech.com' as the forwarding address.",
+          "Select the option to start forwarding or enable forwarding. Enter '<FORWARDED_EMAIL>' as the forwarding address.",
       },
       { type: "strong", text: "Save Changes:", description: "Click 'Save'." },
     ],
@@ -215,7 +216,7 @@ const tabData = [
   {
     value: "outlookDesktop",
     label: "Outlook",
-    icon: <MailOpen />,
+    img: outlookImg,
     badge: (
       <Badge
         className="bg-white  text-blue-700 border-blue-700"
@@ -271,7 +272,7 @@ const tabData = [
         type: "strong",
         text: "Edit the Rule Description:",
         description:
-          "In the bottom box, click 'people or public group'. Type 'info@ironpeakmech.com' in the 'To ->' field.",
+          "In the bottom box, click 'people or public group'. Type '<FORWARDED_EMAIL>' in the 'To ->' field.",
       },
       {
         type: "strong",
@@ -295,69 +296,68 @@ const tabData = [
 
 export const SetupGuideTabs = () => {
   return (
-    <Card className="shadow-md">
-      <CardContent className="p-6 space-y-4">
-        <Tabs defaultValue="gmail">
-          <TabsList className="flex space-x-4">
-            {tabData.map((tab) => (
-              <TabsTrigger
-                className="bg-white text-black data-[state=active]:bg-blue-700 data-[state=active]:text-white transition"
-                key={tab.value}
-                value={tab.value}
-              >
-                {tab.icon} {tab.label} {tab.badge && tab.badge}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-          <ul className="list-disc pl-5 space-y-1 list-inside">
-            {tabData.map((tab) => (
-              <TabsContent key={tab.value} value={tab.value}>
-                {tab.content.map((content, index) => {
-                  if (content.type === "heading") {
-                    return (
-                      <h4
-                        key={index}
-                        className={`${content.fontWeight} text-lg`}
-                      >
-                        {content.text}
-                      </h4>
-                    );
-                  }
-
-                  if (content.type === "strong") {
-                    return (
-                      <li
-                        key={index}
-                        className="list-item flex gap-1 pt-2 pb-2"
-                      >
-                        <strong className="mr-2">{content.text}</strong>{" "}
-                        {content.description}
-                      </li>
-                    );
-                  }
-
-                  if (content.type === "normal-list") {
-                    return (
-                      <li
-                        key={index}
-                        className="list-item flex gap-1 pt-2 pb-2 pl-4"
-                      >
-                        {content.text}
-                      </li>
-                    );
-                  }
-
+    <CardContent className="p-6 space-y-4">
+      <Tabs defaultValue="gmail">
+        <TabsList className="flex space-x-2">
+          {tabData.map((tab) => (
+            <TabsTrigger
+              className="w-[160px] bg-white text-black data-[state=active]:bg-blue-700 data-[state=active]:text-white transition"
+              key={tab.value}
+              value={tab.value}
+            >
+              <div className="flex items-center gap-1">
+                <div className="w-[16px] h-[16px]">
+                  <img src={tab.img} alt="logo" />
+                </div>
+                <span>
+                  {tab.label} {tab.badge && tab.badge}
+                </span>
+              </div>
+            </TabsTrigger>
+          ))}
+        </TabsList>
+        <ul className="list-disc pl-5 space-y-1 list-inside">
+          {tabData.map((tab) => (
+            <TabsContent key={tab.value} value={tab.value}>
+              {tab.content.map((content, index) => {
+                if (content.type === "heading") {
                   return (
-                    <p key={index} className=" pt-4 pb-4">
+                    <h4 key={index} className={`${content.fontWeight} text-lg`}>
                       {content.text}
-                    </p>
+                    </h4>
                   );
-                })}
-              </TabsContent>
-            ))}
-          </ul>
-        </Tabs>
-      </CardContent>
-    </Card>
+                }
+
+                if (content.type === "strong") {
+                  return (
+                    <li key={index} className="list-item flex gap-1 pt-2 pb-2">
+                      <strong className="mr-2">{content.text}</strong>{" "}
+                      {content.description}
+                    </li>
+                  );
+                }
+
+                if (content.type === "normal-list") {
+                  return (
+                    <li
+                      key={index}
+                      className="list-item flex gap-1 pt-2 pb-2 pl-4"
+                    >
+                      {content.text}
+                    </li>
+                  );
+                }
+
+                return (
+                  <p key={index} className=" pt-4 pb-4">
+                    {content.text}
+                  </p>
+                );
+              })}
+            </TabsContent>
+          ))}
+        </ul>
+      </Tabs>
+    </CardContent>
   );
 };

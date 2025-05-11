@@ -1,6 +1,8 @@
 // hooks/useResults.ts
 import { useQuery } from "@tanstack/react-query";
 import request from "@/utils/api";
+import type { BidType } from "@/constants";
+import { useAuth } from "@/context/AuthContext";
 
 interface Filters {
   date?: string;
@@ -10,6 +12,7 @@ interface Filters {
   min_score?: number;
   max_score?: number;
   sort_order?: string;
+  bid_type?: BidType;
 }
 
 export interface ResultItem {
@@ -37,12 +40,8 @@ export const useResults = (
   pageSize: number,
   filters: Filters
 ) => {
-  const userData = localStorage.getItem("user");
-  let email = "";
-  if (userData) {
-    const parsedData = JSON.parse(userData);
-    email = parsedData?.source_email;
-  }
+  const { user } = useAuth();
+  const { source_email: email } = user || { source_email: "" };
 
   return useQuery<ResultsEmailResponse>({
     queryKey: ["results", email, page, pageSize, filters],
@@ -56,9 +55,9 @@ export const useResults = (
       return res.data;
     },
     enabled: !!email,
-    retry: false, // disables retries
+    retry: false,
     refetchOnReconnect: false,
-    refetchOnWindowFocus:false
-    // refetchInterval: 10000
+    refetchOnWindowFocus: false,
+    refetchInterval: 10000,
   });
 };

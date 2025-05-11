@@ -22,7 +22,7 @@ type OnboardingResponse = {
 };
 
 export async function getOnboarding(): Promise<OnboardingResponse> {
-  const res = await request.get("/api/onboarding");
+  const res = await request.post("/api/get-onboarding");
   return res.data;
 }
 

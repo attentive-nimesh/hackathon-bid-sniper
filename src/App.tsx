@@ -2,12 +2,13 @@ import "./App.css";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
-import TradeParams from "./pages/TradeParams";
+import Setup from "./pages/Setup";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { Toaster } from "sonner";
+import { useAuth } from "./context/AuthContext";
 
 function App() {
-  const token = localStorage.getItem("token");
+  const { token } = useAuth();
 
   return (
     <>
@@ -23,10 +24,10 @@ function App() {
           }
         />
         <Route
-          path="/trade-params"
+          path="/setup"
           element={
             <ProtectedRoute>
-              <TradeParams />
+              <Setup />
             </ProtectedRoute>
           }
         />
