@@ -57,7 +57,7 @@ export default function ResultsTable({
             <TableHead>Subject</TableHead>
             <TableHead className="w-[100px]">Score</TableHead>
             <TableHead className="w-[200px]">Email Received Date</TableHead>
-            <TableHead className="w-[200px] text-right">Action</TableHead>
+            <TableHead className="w-[250px] text-right">Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -71,7 +71,9 @@ export default function ResultsTable({
             projects.map((project, i) => (
               <TableRow key={i}>
                 <TableCell>{(page - 1) * itemsPerPage + i + 1}</TableCell>
-                <TableCell>{project?.email_subject || ""}</TableCell>
+                <TableCell className="whitespace-normal break-words max-w-xs">
+                  {project?.email_subject || ""}
+                </TableCell>
                 <TableCell>{project?.score}</TableCell>
                 <TableCell>{formatCustomDate(project?.email_date)}</TableCell>
                 <TableCell className="text-right">

@@ -53,7 +53,7 @@ export const AnalysisModal = ({
                     <TableCell>{toPascalCase(val.name)}</TableCell>
                     <TableCell>{val.score}</TableCell>
                     <TableCell>{val.contribution}</TableCell>
-                    <TableCell className="w-[400px] break-words">
+                    <TableCell className="whitespace-normal break-words max-w-xs">
                       {val.explanation}
                     </TableCell>
                   </TableRow>

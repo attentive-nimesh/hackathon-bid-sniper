@@ -4,6 +4,15 @@ import request from "@/utils/api";
 import type { BidType } from "@/constants";
 import { useAuth } from "@/context/AuthContext";
 
+export interface ParameterScoreItem {
+  calculation_details: string | null;
+  contribution: string;
+  explanation: string;
+  score: number;
+}
+
+export type ParameterScore = Record<string, ParameterScoreItem>;
+
 interface Filters {
   date?: string;
   url?: string;
@@ -26,6 +35,7 @@ export interface ResultItem {
   email_subject: string;
   score: number;
   dueDate: string;
+  parameter_scores: Record<string, ParameterScoreItem>;
 }
 
 export interface ResultsEmailResponse {
