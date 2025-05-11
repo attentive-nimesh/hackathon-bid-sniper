@@ -1,0 +1,38 @@
+.gunshot-button {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.1s ease-in-out;
+}
+
+.gunshot-button::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  background: rgba(255, 0, 0, 0.4);
+  transform: scale(0);
+  opacity: 0;
+  pointer-events: none;
+  animation: none;
+}
+
+.gunshot-button:active::after,
+.gunshot-button:hover::after {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 1;
+  animation: gunshot-ripple 300ms ease-out forwards;
+}
+
+@keyframes gunshot-ripple {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(10);
+    opacity: 0;
+  }
+}
